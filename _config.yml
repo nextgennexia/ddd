@@ -1,0 +1,41 @@
+# For Atom Feed
+domain: training.github.com
+author: GitHub Training Team
+email: training@github.com
+title: GitHub Training
+
+# standard jekyll configuration
+
+baseurl: /kit
+permalink: /articles/:title
+highlighter: pygments
+exclude:
+- bin
+- config.rb
+- Gemfile
+- Gemfile.lock
+- gems
+- Procfile
+- Rakefile
+- README.md
+- script
+- vendor
+
+collections:
+  modules:
+    output: true
+  courses:
+    output: true
+
+include:
+- _stylesheets
+- _javascript
+
+markdown: rdiscount
+
+sass:
+  sass_dir: assets/vendor/
+  style: :compressed
+
+# Custom site configuration
+lang: en
