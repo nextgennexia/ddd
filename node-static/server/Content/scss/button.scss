@@ -1,0 +1,15 @@
+﻿.button {
+	display: inline-block;
+	padding: 5px 15px;
+	background: #B652A7;
+	background: linear-gradient(to bottom, #B652A7 50%, #A2218D 50%);
+	color: #fff;
+	border-radius: 7px;
+	cursor: pointer;
+	user-select: none;
+
+	&:hover {
+		background: #A2218D;
+		background: linear-gradient(to bottom, #964489 50%, #851773 50%);
+	}
+}

@@ -1,0 +1,119 @@
+﻿%html
+	%head
+		%meta{:charset => "utf-8"}
+		%title Test
+		%link{:rel => "stylesheet", :href => "Content/css/font-awesome.min.css"}
+		%link{:rel => "stylesheet", :href => "Content/css/style.min.css"}
+		%script{:src => "Scripts/jquery-1.12.3.min.js"}
+		%script{:src => "Scripts/handlebars-v4.0.5.js"}
+		%script{:src => "Scripts/script.js", :defer => ""}
+	%body
+		.login
+			%input.field-text{:type => "text", :placeholder => "user-id"}
+			.button Ok
+		.main-wrap
+			.column
+			.column
+			.column
+			.column
+
+	.popup-wrap.hidden
+		.popup.lightbox-offer
+			.lightbox-header
+				.author
+					%img.person-avatar
+					.personal-content
+						%a.person-name.link{:href => "/"} Евгений Пологов
+						%br
+						%span.status Нуждается в этом
+					.button Добавить в друзья
+				.close-lightbox
+					%span.icon.fa.fa-times
+					%span.content Закрыть
+			.lightbox-body
+				.main-content.clearfix
+					.offer-wrap
+						.title-wrap
+							.offer-title Отпуск с семьей на море
+							.offer-category Путешествия
+						%img.offer-img{:src => "images/offerImg.gif"}
+						.offer-content Разместиться можно по своему вкусу в Тивате, в  Которе, в Будве или в местности под названием Радовичи ( это что-то типа дерев... ...на побережье моря, с пляжем «Плави Горизонт», и с целой кучей туристических отелей)...
+					.social-actions
+						.button.offer-save Добавить к себе
+						.button.like Мне нравится
+						.button.view-answers Комменировать
+				.latest-answers
+					.author
+						%img.person-avatar
+						.personal-content
+							%span.comment Отличное место! Мы там не раз отдыхали семьями с детьми! Детишкам там отдыхать самое то!
+					.author
+						%img.person-avatar
+						.personal-content
+							%span.comment Отличное место! Мы там не раз отдыхали семьями с детьми! Детишкам там отдыхать самое то!
+				.add-comment
+					.author
+						%img.person-avatar
+						.personal-content
+							%input.field-textarea{:type => "textarea", :placeholder => "Комментировать"}
+			.lightbox-footer
+				.count-saved
+					%span.title 3 добавили себе
+					%ul.list
+						%li.list-item
+							%img.person-avatar
+						%li.list-item
+							%img.person-avatar
+						%li.list-item
+							%img.person-avatar
+				.count-liked
+					%span.title 3 нравится
+					%ul.list
+						%li.list-item
+							%img.person-avatar
+						%li.list-item
+							%img.person-avatar
+						%li.list-item
+							%img.person-avatar
+
+
+
+%script#offer-plate-templ{:type => "text/x-handlebars-template"}
+	.offer-plate
+		%img.offer-img{:src => "{{img}}"}
+		.view-offer Ознакомиться с предложением
+		.social-actions
+			.item.lightbulb.fa.fa-lightbulb-o
+			.item.like.fa.fa-heart
+			.item.offer-save.fa.fa-plus
+			.item.view-comments.fa.fa-comment-o
+		.offer-content
+			.description
+				.offer-title {{title}}
+				.offer-category {{category}}
+				.offer-date {{dateFrom}}-{{dateTo}}
+				.offer-location {{location}}
+			.social-info
+				%span.item.count-likes {{likes.0.count}} нравится
+				%span.item.count-comments {{comments.0.count}} комментария
+				%span.item.count-answers {{answers.0.count}} отзыва
+				%span.item.count-saved {{saved.0.count}} добавили себе
+			.offer-author
+				.author
+					%img.person-avatar{:src => "{{author.0.avatar}}"}
+					.personal-content
+						%a.person-name.link{:href => "/"} {{author.0.fullname}}
+						%br
+						%span.status предлагает
+			.latest-comments
+				{{#each comments.0.fromUsers}}
+				.author
+					%img.person-avatar{:src => "{{avatar}}"}
+					.personal-content
+						%span.comment {{comment}}
+				{{/each}}
+			.add-comment
+				.author
+					%img.person-avatar{:src => "{{author.0.avatar}}"}
+					.personal-content
+						%input.field-text{:type => "text", :placeholder => "Комментировать"}
