@@ -7,23 +7,22 @@ var file = new static.Server('.');
 
 function accept(req, res) {
 
-  if (req.url == '/vote') {
-    setTimeout(function () {
-      res.end('Ваш голос принят: ' + new Date());
-    }, 1500);
+  if (req.url == '/refresh') {
+    req.on('data', function (chunk) {
+      var fs = require('fs');
+      fs.writeFile('offers.json', chunk, function (err) {
+        if (err) {
+        return console.log(err)}
+      });
+      res.end(chunk);
+    });
   } else {
-    file.serve(req, res); // (если он есть)
+    file.serve(req, res);
   }
-
 }
 
 if (!module.parent) {
-  http.createServer(accept).listen(8081);
+  http.createServer(accept).listen(8080);
 } else {
   exports.accept = accept;
 }
-
-/*
-fs=require("fs")
-fs.writeFileSync("txt.txt", "my text",  "ascii")
-*/

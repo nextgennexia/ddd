@@ -110,14 +110,14 @@
   </div>
 </html>
 <script id='offer-plate-templ' type='text/x-handlebars-template'>
-  <div class='offer-plate'>
+  <div class='offer-plate' data-id='{{id}}'>
     <img class='offer-img' src='{{img}}'>
     <div class='view-offer'>Ознакомиться с предложением</div>
     <div class='social-actions'>
-      <div class='item lightbulb fa fa-lightbulb-o'></div>
-      <div class='item like fa fa-heart'></div>
-      <div class='item offer-save fa fa-plus'></div>
-      <div class='item view-comments fa fa-comment-o'></div>
+      <div class='item js-lightbulb fa fa-lightbulb-o'></div>
+      <div class='item js-like fa fa-heart'></div>
+      <div class='item js-offer-save fa fa-plus'></div>
+      <div class='item js-view-comments fa fa-comment-o'></div>
     </div>
     <div class='offer-content'>
       <div class='description'>
@@ -142,7 +142,7 @@
           </div>
         </div>
       </div>
-      <div class='latest-comments'>
+      <div class='latest-comments hidden'>
         {{#each comments.0.fromUsers}}
         <div class='author'>
           <img class='person-avatar' src='{{avatar}}'>

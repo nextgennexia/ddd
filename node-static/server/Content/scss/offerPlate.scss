@@ -10,21 +10,23 @@
 	&.hover {
 		border: 1px solid #ABC9E8;
 	}
+
+	&:hover {
+		.social-actions {
+			opacity: 1;
+		}
+
+		.view-offer {
+			opacity: 1;
+		}
+	}
 }
 
 .offer-img {
 	width: 100%;
 	max-height: 300px;
 
-	&:hover {
-		~ .social-actions {
-			opacity: 1;
-		}
-
-		~ .view-offer {
-			opacity: 1;
-		}
-	}
+	
 }
 
 .view-offer {

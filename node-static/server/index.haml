@@ -79,14 +79,14 @@
 
 
 %script#offer-plate-templ{:type => "text/x-handlebars-template"}
-	.offer-plate
+	.offer-plate{:"data-id" => "{{id}}"}
 		%img.offer-img{:src => "{{img}}"}
 		.view-offer Ознакомиться с предложением
 		.social-actions
-			.item.lightbulb.fa.fa-lightbulb-o
-			.item.like.fa.fa-heart
-			.item.offer-save.fa.fa-plus
-			.item.view-comments.fa.fa-comment-o
+			.item.js-lightbulb.fa.fa-lightbulb-o
+			.item.js-like.fa.fa-heart
+			.item.js-offer-save.fa.fa-plus
+			.item.js-view-comments.fa.fa-comment-o
 		.offer-content
 			.description
 				.offer-title {{title}}
@@ -105,7 +105,7 @@
 						%a.person-name.link{:href => "/"} {{author.0.fullname}}
 						%br
 						%span.status предлагает
-			.latest-comments
+			.latest-comments.hidden
 				{{#each comments.0.fromUsers}}
 				.author
 					%img.person-avatar{:src => "{{avatar}}"}
