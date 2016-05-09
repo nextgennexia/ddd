@@ -17,13 +17,14 @@
 			.column
 			.column
 
-	.popup-wrap.hidden
-		.popup.lightbox-offer
+	.popup-wrap.js-lightbox-offer.hidden
+	%script#offer-templ{:type => "text/x-handlebars-template"}
+		.popup.lightbox-offer{:"data-id" => "{{id}}"}
 			.lightbox-header
 				.author
-					%img.person-avatar
+					%img.person-avatar{:src => "{{author.0.avatar}}"}
 					.personal-content
-						%a.person-name.link{:href => "/"} Евгений Пологов
+						%a.person-name.link{:href => "/"} {{author.0.fullname}}
 						%br
 						%span.status Нуждается в этом
 					.button Добавить в друзья
@@ -34,47 +35,41 @@
 				.main-content.clearfix
 					.offer-wrap
 						.title-wrap
-							.offer-title Отпуск с семьей на море
-							.offer-category Путешествия
+							.offer-title {{title}}
+							.offer-category {{category}}
 						%img.offer-img{:src => "images/offerImg.gif"}
-						.offer-content Разместиться можно по своему вкусу в Тивате, в  Которе, в Будве или в местности под названием Радовичи ( это что-то типа дерев... ...на побережье моря, с пляжем «Плави Горизонт», и с целой кучей туристических отелей)...
+						.offer-content {{content}}
 					.social-actions
-						.button.offer-save Добавить к себе
-						.button.like Мне нравится
-						.button.view-answers Комменировать
-				.latest-answers
+						.button.js-offer-save Добавить к себе
+						.button.js-like Мне нравится
+						.button.js-comments Комменировать
+				.latest-comments.hidden
+					{{#latestComments answers.0.fromUsers}}
+					.author
+						%img.person-avatar{:src => "{{avatar}}"}
+						.personal-content
+							%span.comment {{comment}}
+					{{/latestComments}}
+				.add-comment.hidden
 					.author
 						%img.person-avatar
 						.personal-content
-							%span.comment Отличное место! Мы там не раз отдыхали семьями с детьми! Детишкам там отдыхать самое то!
-					.author
-						%img.person-avatar
-						.personal-content
-							%span.comment Отличное место! Мы там не раз отдыхали семьями с детьми! Детишкам там отдыхать самое то!
-				.add-comment
-					.author
-						%img.person-avatar
-						.personal-content
-							%input.field-textarea{:type => "textarea", :placeholder => "Комментировать"}
+							%input.field-textarea.js-comment{:type => "textarea", :placeholder => "Комментировать"}
 			.lightbox-footer
 				.count-saved
-					%span.title 3 добавили себе
+					%span.title {{saved.0.count}} добавили себе
 					%ul.list
+						{{#each saved.0.fromUsers}}
 						%li.list-item
-							%img.person-avatar
-						%li.list-item
-							%img.person-avatar
-						%li.list-item
-							%img.person-avatar
+							%img.person-avatar{:src => "{{avatar}}"}
+						{{/each}}
 				.count-liked
-					%span.title 3 нравится
+					%span.title {{likes.0.count}} нравится
 					%ul.list
+						{{#each likes.0.fromUsers}}
 						%li.list-item
-							%img.person-avatar
-						%li.list-item
-							%img.person-avatar
-						%li.list-item
-							%img.person-avatar
+							%img.person-avatar{:src => "{{avatar}}"}
+						{{/each}}
 
 
 
@@ -83,10 +78,10 @@
 		%img.offer-img{:src => "{{img}}"}
 		.view-offer Ознакомиться с предложением
 		.social-actions
-			.item.js-lightbulb.fa.fa-lightbulb-o
+			.item.js-offer-save.fa.fa-lightbulb-o
 			.item.js-like.fa.fa-heart
-			.item.js-offer-save.fa.fa-plus
-			.item.js-view-comments.fa.fa-comment-o
+			.item.js-comments.fa.fa-plus
+			.item.js-answer.fa.fa-comment-o
 		.offer-content
 			.description
 				.offer-title {{title}}
@@ -106,14 +101,14 @@
 						%br
 						%span.status предлагает
 			.latest-comments.hidden
-				{{#each comments.0.fromUsers}}
+				{{#latestComments comments.0.fromUsers}}
 				.author
 					%img.person-avatar{:src => "{{avatar}}"}
 					.personal-content
 						%span.comment {{comment}}
-				{{/each}}
-			.add-comment
+				{{/latestComments}}
+			.add-comment.hidden
 				.author
-					%img.person-avatar{:src => "{{author.0.avatar}}"}
+					%img.person-avatar
 					.personal-content
-						%input.field-text{:type => "text", :placeholder => "Комментировать"}
+						%input.field-text.js-comment{:type => "text", :placeholder => "Комментировать"}

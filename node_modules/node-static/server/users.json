@@ -1,0 +1,19 @@
+﻿{
+	"users": [
+		{
+			"id": 1,
+			"fullname": "Василий Пупкин",
+			"avater": "../../../images/lampa.gif"
+		},
+		{
+			"id": 2,
+			"fullname": "Герасимов Герасим",
+			"avater": "../../../images/lampa.gif"
+		},
+		{
+			"id": 3,
+			"fullname": "Юзеров юзер",
+			"avater": "../../../images/lampa.gif"
+		}
+	]
+}

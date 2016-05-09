@@ -25,8 +25,6 @@
 .offer-img {
 	width: 100%;
 	max-height: 300px;
-
-	
 }
 
 .view-offer {
@@ -38,13 +36,13 @@
 	text-align: center;
 	color: #FFFFFF;
 	background: #ABC9E7;
-	border-radius: 7px 7px 0 0;
+	border-radius: 10px 10px 0 0;
 	opacity: 0;
 	cursor: pointer;
 }
 
 .offer-content {
-	margin-bottom: 15px;
+	margin-bottom: 3px;
 	background: #FFFFFF;
 
 	.description {
@@ -64,8 +62,8 @@
 }
 
 .offer-title {
-		font-weight: bold;
-	}
+	font-weight: bold;
+}
 
 .social-actions {
 	position: absolute;
@@ -112,14 +110,20 @@
 
 .add-comment {
 	.author {
-		padding-bottom: 0;
 		border-bottom: none;
+	}
+}
+
+.latest-comments {
+	.author {
+		padding: 15px;
+		border-top: 1px solid #D7D7D7;
+		border-bottom: 1px solid #D7D7D7;
 	}
 }
 
 .author {
 	padding: 15px;
-	border-bottom: 1px solid #D7D7D7;
 }
 
 .person-avatar {

@@ -20,13 +20,14 @@
       <div class='column'></div>
     </div>
   </body>
-  <div class='popup-wrap hidden'>
-    <div class='popup lightbox-offer'>
+  <div class='popup-wrap js-lightbox-offer hidden'></div>
+  <script id='offer-templ' type='text/x-handlebars-template'>
+    <div class='popup lightbox-offer' data-id='{{id}}'>
       <div class='lightbox-header'>
         <div class='author'>
-          <img class='person-avatar'>
+          <img class='person-avatar' src='{{author.0.avatar}}'>
           <div class='personal-content'>
-            <a class='person-name link' href='/'>Евгений Пологов</a>
+            <a class='person-name link' href='/'>{{author.0.fullname}}</a>
             <br>
             <span class='status'>Нуждается в этом</span>
           </div>
@@ -41,83 +42,71 @@
         <div class='main-content clearfix'>
           <div class='offer-wrap'>
             <div class='title-wrap'>
-              <div class='offer-title'>Отпуск с семьей на море</div>
-              <div class='offer-category'>Путешествия</div>
+              <div class='offer-title'>{{title}}</div>
+              <div class='offer-category'>{{category}}</div>
             </div>
             <img class='offer-img' src='images/offerImg.gif'>
-            <div class='offer-content'>Разместиться можно по своему вкусу в Тивате, в  Которе, в Будве или в местности под названием Радовичи ( это что-то типа дерев... ...на побережье моря, с пляжем «Плави Горизонт», и с целой кучей туристических отелей)...</div>
+            <div class='offer-content'>{{content}}</div>
           </div>
           <div class='social-actions'>
-            <div class='button offer-save'>Добавить к себе</div>
-            <div class='button like'>Мне нравится</div>
-            <div class='button view-answers'>Комменировать</div>
+            <div class='button js-offer-save'>Добавить к себе</div>
+            <div class='button js-like'>Мне нравится</div>
+            <div class='button js-comments'>Комменировать</div>
           </div>
         </div>
-        <div class='latest-answers'>
+        <div class='latest-comments hidden'>
+          {{#latestComments answers.0.fromUsers}}
           <div class='author'>
-            <img class='person-avatar'>
+            <img class='person-avatar' src='{{avatar}}'>
             <div class='personal-content'>
-              <span class='comment'>Отличное место! Мы там не раз отдыхали семьями с детьми! Детишкам там отдыхать самое то!</span>
+              <span class='comment'>{{comment}}</span>
             </div>
           </div>
-          <div class='author'>
-            <img class='person-avatar'>
-            <div class='personal-content'>
-              <span class='comment'>Отличное место! Мы там не раз отдыхали семьями с детьми! Детишкам там отдыхать самое то!</span>
-            </div>
-          </div>
+          {{/latestComments}}
         </div>
-        <div class='add-comment'>
+        <div class='add-comment hidden'>
           <div class='author'>
             <img class='person-avatar'>
             <div class='personal-content'>
-              <input class='field-textarea' placeholder='Комментировать' type='textarea'>
+              <input class='field-textarea js-comment' placeholder='Комментировать' type='textarea'>
             </div>
           </div>
         </div>
       </div>
       <div class='lightbox-footer'>
         <div class='count-saved'>
-          <span class='title'>3 добавили себе</span>
+          <span class='title'>{{saved.0.count}} добавили себе</span>
           <ul class='list'>
+            {{#each saved.0.fromUsers}}
             <li class='list-item'>
-              <img class='person-avatar'>
+              <img class='person-avatar' src='{{avatar}}'>
             </li>
-            <li class='list-item'>
-              <img class='person-avatar'>
-            </li>
-            <li class='list-item'>
-              <img class='person-avatar'>
-            </li>
+            {{/each}}
           </ul>
         </div>
         <div class='count-liked'>
-          <span class='title'>3 нравится</span>
+          <span class='title'>{{likes.0.count}} нравится</span>
           <ul class='list'>
+            {{#each likes.0.fromUsers}}
             <li class='list-item'>
-              <img class='person-avatar'>
+              <img class='person-avatar' src='{{avatar}}'>
             </li>
-            <li class='list-item'>
-              <img class='person-avatar'>
-            </li>
-            <li class='list-item'>
-              <img class='person-avatar'>
-            </li>
+            {{/each}}
           </ul>
         </div>
       </div>
     </div>
-  </div>
+  </script>
 </html>
 <script id='offer-plate-templ' type='text/x-handlebars-template'>
   <div class='offer-plate' data-id='{{id}}'>
     <img class='offer-img' src='{{img}}'>
     <div class='view-offer'>Ознакомиться с предложением</div>
     <div class='social-actions'>
-      <div class='item js-lightbulb fa fa-lightbulb-o'></div>
+      <div class='item js-offer-save fa fa-lightbulb-o'></div>
       <div class='item js-like fa fa-heart'></div>
-      <div class='item js-offer-save fa fa-plus'></div>
-      <div class='item js-view-comments fa fa-comment-o'></div>
+      <div class='item js-comments fa fa-plus'></div>
+      <div class='item js-answer fa fa-comment-o'></div>
     </div>
     <div class='offer-content'>
       <div class='description'>
@@ -143,20 +132,20 @@
         </div>
       </div>
       <div class='latest-comments hidden'>
-        {{#each comments.0.fromUsers}}
+        {{#latestComments comments.0.fromUsers}}
         <div class='author'>
           <img class='person-avatar' src='{{avatar}}'>
           <div class='personal-content'>
             <span class='comment'>{{comment}}</span>
           </div>
         </div>
-        {{/each}}
+        {{/latestComments}}
       </div>
-      <div class='add-comment'>
+      <div class='add-comment hidden'>
         <div class='author'>
-          <img class='person-avatar' src='{{author.0.avatar}}'>
+          <img class='person-avatar'>
           <div class='personal-content'>
-            <input class='field-text' placeholder='Комментировать' type='text'>
+            <input class='field-text js-comment' placeholder='Комментировать' type='text'>
           </div>
         </div>
       </div>

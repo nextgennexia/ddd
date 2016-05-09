@@ -1,0 +1,43 @@
+﻿html, body {
+	margin: 0;
+	font: 12px 'Myriad Pro', sans-serif;
+}
+
+.column{
+	float: left;
+}
+
+@media screen and (max-width: 950px) {
+	.main-wrap {
+		width: 950px;
+	}
+}
+
+.clearfix:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
+.hidden {
+	display: none;
+}
+
+.list{
+	margin: 10px 0 20px;
+	padding: 0;
+
+	.list-item{
+		display: inline-block;
+		list-style-type: none;
+		margin: 0 7px;
+	}
+}
+
+
+@import "button.scss";
+@import "link.scss";
+@import "field-text.scss";
+@import "offerPlate.scss";
+@import "popup.scss";
+@import "lightboxes.scss";
