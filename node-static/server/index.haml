@@ -8,18 +8,25 @@
 		%script{:src => "Scripts/handlebars-v4.0.5.js"}
 		%script{:src => "Scripts/script.js", :defer => ""}
 	%body
-		.login
-			%input.field-text{:type => "text", :placeholder => "user-id"}
-			.button Ok
-		.main-wrap
+		.login-wrap
+			.author
+				%img.person-avatar{:src => "images/lampa.gif"}
+				.personal-content
+					%span Вы вошли как:
+					%br
+					%a.person-name.link{:href => "/"} Гость
+			.login
+				%input.field-text{:type => "text", :placeholder => "user-id"}
+				.button Ok
+		.main-wrap.clearfix
 			.column
 			.column
 			.column
 			.column
 
-	.popup-wrap.js-lightbox-offer.hidden
+	.lightbox-wrap.hidden
 	%script#offer-templ{:type => "text/x-handlebars-template"}
-		.popup.lightbox-offer{:"data-id" => "{{id}}"}
+		.lightbox.offer{:"data-id" => "{{id}}"}
 			.lightbox-header
 				.author
 					%img.person-avatar{:src => "{{author.0.avatar}}"}
@@ -27,61 +34,80 @@
 						%a.person-name.link{:href => "/"} {{author.0.fullname}}
 						%br
 						%span.status Нуждается в этом
-					.button Добавить в друзья
-				.close-lightbox
+					{{#removeOffer author}}
+					%div{:class => "button {{hidden}}", :"data-button" => "removeOffer"} Удалить предложение
+					{{/removeOffer}}
+				.close-item.js-close-lightbox
 					%span.icon.fa.fa-times
 					%span.content Закрыть
 			.lightbox-body
 				.main-content.clearfix
-					.offer-wrap
+					.offer-content
 						.title-wrap
 							.offer-title {{title}}
 							.offer-category {{category}}
-						%img.offer-img{:src => "images/offerImg.gif"}
-						.offer-content {{content}}
+						.offer-img-wrap
+							%img.offer-img{:src => "{{img}}"}
+						.offer-description {{description}}
 					.social-actions
-						.button.js-offer-save Добавить к себе
-						.button.js-like Мне нравится
-						.button.js-comments Комменировать
+						{{#save saved.0.fromUsers}}
+						%div{:class => "button {{saved}}", :"data-button" => "save"} Добавить к себе
+						{{/save}}
+						{{#like likes.0.fromUsers}}
+						%div{:class => "button {{liked}}", :"data-button" => "like"} Мне нравится
+						{{/like}}
+						.button{:"data-button" => "viewComment"} Комменировать
 				.latest-comments.hidden
-					{{#latestComments answers.0.fromUsers}}
-					.author
+					{{#latestAnswers answers.0.fromUsers}}
+					.author{:"data-id" => "{{id}}"}
 						%img.person-avatar{:src => "{{avatar}}"}
 						.personal-content
 							%span.comment {{comment}}
-					{{/latestComments}}
-				.add-comment.hidden
-					.author
-						%img.person-avatar
-						.personal-content
-							%input.field-textarea.js-comment{:type => "textarea", :placeholder => "Комментировать"}
+						{{#close userId}}
+						.close-item
+							%span.icon.fa.fa-times{:"data-button" => "removeAnswer"}
+						{{/close}}
+					{{/latestAnswers}}
+				.add-answer.hidden
 			.lightbox-footer
-				.count-saved
-					%span.title {{saved.0.count}} добавили себе
+				{{#if saved.0.count}}
+				.saved-info
+					{{#hasCount saved.0.count}}
+					%span.title {{this}} добавили себе
+					{{/hasCount}}
 					%ul.list
 						{{#each saved.0.fromUsers}}
 						%li.list-item
 							%img.person-avatar{:src => "{{avatar}}"}
 						{{/each}}
-				.count-liked
-					%span.title {{likes.0.count}} нравится
+				{{/if}}
+				{{#if likes.0.count}}
+				.liked-info
+					{{#hasCount likes.0.count}}
+					%span.title {{this}} нравится
+					{{/hasCount}}
 					%ul.list
 						{{#each likes.0.fromUsers}}
 						%li.list-item
 							%img.person-avatar{:src => "{{avatar}}"}
 						{{/each}}
-
+				{{/if}}
 
 
 %script#offer-plate-templ{:type => "text/x-handlebars-template"}
 	.offer-plate{:"data-id" => "{{id}}"}
-		%img.offer-img{:src => "{{img}}"}
-		.view-offer Ознакомиться с предложением
+		.offer-img-wrap
+			%img.offer-img{:src => "{{img}}"}
+		.view-offer{:"data-button" => "openOfferLightbox"} Ознакомиться с предложением
 		.social-actions
-			.item.js-offer-save.fa.fa-lightbulb-o
-			.item.js-like.fa.fa-heart
-			.item.js-comments.fa.fa-plus
-			.item.js-answer.fa.fa-comment-o
+			{{#save saved.0.fromUsers}}
+			%div{:class => "item fa fa-lightbulb-o {{saved}}", :"data-button" => "save"}
+			{{/save}}
+			{{#like likes.0.fromUsers}}
+			%div{:class => "item fa fa-heart {{liked}}", :"data-button" => "like"}
+			{{/like}}
+			.item.fa.fa-plus{:"data-button" => "viewComment"}
+			.item.fa.fa-comment{:"data-button" => "openOfferLightbox"}
 		.offer-content
 			.description
 				.offer-title {{title}}
@@ -89,10 +115,18 @@
 				.offer-date {{dateFrom}}-{{dateTo}}
 				.offer-location {{location}}
 			.social-info
-				%span.item.count-likes {{likes.0.count}} нравится
-				%span.item.count-comments {{comments.0.count}} комментария
-				%span.item.count-answers {{answers.0.count}} отзыва
-				%span.item.count-saved {{saved.0.count}} добавили себе
+				{{#hasCount likes.0.count}}
+				%span.item.count-likes {{this}} нравится
+				{{/hasCount}}
+				{{#hasCount comments.0.count}}
+				%span.item.count-comments {{this}} комментария
+				{{/hasCount}}
+				{{#hasCount answers.0.count}}
+				%span.item.count-answers {{this}} отзыва
+				{{/hasCount}}
+				{{#hasCount saved.0.count}}
+				%span.item.saved-info {{this}} добавили себе
+				{{/hasCount}}
 			.offer-author
 				.author
 					%img.person-avatar{:src => "{{author.0.avatar}}"}
@@ -102,13 +136,32 @@
 						%span.status предлагает
 			.latest-comments.hidden
 				{{#latestComments comments.0.fromUsers}}
-				.author
+				.author{:"data-id" => "{{id}}"}
 					%img.person-avatar{:src => "{{avatar}}"}
 					.personal-content
 						%span.comment {{comment}}
+					{{#close userId}}
+					.close-item
+						%span.icon.fa.fa-times{:"data-button" => "removeComment"}
+					{{/close}}
 				{{/latestComments}}
 			.add-comment.hidden
-				.author
-					%img.person-avatar
-					.personal-content
-						%input.field-text.js-comment{:type => "text", :placeholder => "Комментировать"}
+
+%script#add-comment-templ{:type => "text/x-handlebars-template"}
+	.author
+		%img.person-avatar{:src => "{{avatar}}"}
+		.personal-content
+			%input.field-text.js-comment{:type => "text", :placeholder => "Комментировать"}
+
+%script#add-answer-templ{:type => "text/x-handlebars-template"}
+	.author
+		%img.person-avatar{:src => "{{avatar}}"}
+		.personal-content
+			%textarea.field-textarea.js-comment{:placeholder => "Комментировать", :maxlength => "500"}
+
+%script#user-plate-templ{:type => "text/x-handlebars-template"}
+	%img.person-avatar{:src => "{{avatar}}"}
+	.personal-content
+		%span Вы вошли как:
+		%br
+		%a.person-name.link{:href => "/"} {{fullname}}

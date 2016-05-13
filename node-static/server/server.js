@@ -4,17 +4,18 @@ var querystring = require('querystring');
 var static = require('node-static');
 var file = new static.Server('.');
 
-
 function accept(req, res) {
 
   if (req.url == '/refresh') {
     req.on('data', function (chunk) {
       var fs = require('fs');
-      fs.writeFile('offers.json', chunk, function (err) {
+      var dd = fs.writeFile('offers.json', chunk, function (err) {
         if (err) {
-        return console.log(err)}
+          console.log(err);
+        } else {
+          res.end(chunk);
+        }
       });
-      res.end(chunk);
     });
   } else {
     file.serve(req, res);

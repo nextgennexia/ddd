@@ -3,16 +3,6 @@
 	font: 12px 'Myriad Pro', sans-serif;
 }
 
-.column{
-	float: left;
-}
-
-@media screen and (max-width: 950px) {
-	.main-wrap {
-		width: 950px;
-	}
-}
-
 .clearfix:after {
 	content: '';
 	display: block;
@@ -20,17 +10,65 @@
 }
 
 .hidden {
-	display: none;
+	display: none !important;
 }
 
-.list{
+.column {
+	float: left;
+}
+
+.main-wrap {
+	width: 1000px;
+}
+
+.list {
 	margin: 10px 0 20px;
 	padding: 0;
+	font-size: 0;
 
-	.list-item{
+	.list-item {
 		display: inline-block;
 		list-style-type: none;
-		margin: 0 7px;
+		margin: 0 7px 7px;
+		font-size: 12px;
+	}
+}
+
+.login-wrap {
+	background: #F1F1F1;
+
+	.author,
+	.login {
+		display: inline-block;
+	}
+
+	.author {
+		width: 150px;
+	}
+
+	.personal-content {
+		width: auto;
+	}
+}
+
+.close-item {
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: inline-block;
+	margin: 3px 12px;
+	font-size: 14px;
+	color: #999;
+	cursor: pointer;
+	user-select: none;
+
+	&:hover {
+		color: #333;
+	}
+
+	.icon {
+		float: right;
+		margin: 0 0 0 6px;
 	}
 }
 
@@ -38,6 +76,6 @@
 @import "button.scss";
 @import "link.scss";
 @import "field-text.scss";
+@import "common-offer.scss";
 @import "offerPlate.scss";
-@import "popup.scss";
 @import "lightboxes.scss";

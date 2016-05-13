@@ -9,20 +9,30 @@
     <script defer='' src='Scripts/script.js'></script>
   </head>
   <body>
-    <div class='login'>
-      <input class='field-text' placeholder='user-id' type='text'>
-      <div class='button'>Ok</div>
+    <div class='login-wrap'>
+      <div class='author'>
+        <img class='person-avatar' src='images/lampa.gif'>
+        <div class='personal-content'>
+          <span>Вы вошли как:</span>
+          <br>
+          <a class='person-name link' href='/'>Гость</a>
+        </div>
+      </div>
+      <div class='login'>
+        <input class='field-text' placeholder='user-id' type='text'>
+        <div class='button'>Ok</div>
+      </div>
     </div>
-    <div class='main-wrap'>
+    <div class='main-wrap clearfix'>
       <div class='column'></div>
       <div class='column'></div>
       <div class='column'></div>
       <div class='column'></div>
     </div>
   </body>
-  <div class='popup-wrap js-lightbox-offer hidden'></div>
+  <div class='lightbox-wrap hidden'></div>
   <script id='offer-templ' type='text/x-handlebars-template'>
-    <div class='popup lightbox-offer' data-id='{{id}}'>
+    <div class='lightbox offer' data-id='{{id}}'>
       <div class='lightbox-header'>
         <div class='author'>
           <img class='person-avatar' src='{{author.0.avatar}}'>
@@ -31,51 +41,60 @@
             <br>
             <span class='status'>Нуждается в этом</span>
           </div>
-          <div class='button'>Добавить в друзья</div>
+          {{#removeOffer author}}
+          <div class='button {{hidden}}' data-button='removeOffer'>Удалить предложение</div>
+          {{/removeOffer}}
         </div>
-        <div class='close-lightbox'>
+        <div class='close-item js-close-lightbox'>
           <span class='icon fa fa-times'></span>
           <span class='content'>Закрыть</span>
         </div>
       </div>
       <div class='lightbox-body'>
         <div class='main-content clearfix'>
-          <div class='offer-wrap'>
+          <div class='offer-content'>
             <div class='title-wrap'>
               <div class='offer-title'>{{title}}</div>
               <div class='offer-category'>{{category}}</div>
             </div>
-            <img class='offer-img' src='images/offerImg.gif'>
-            <div class='offer-content'>{{content}}</div>
+            <div class='offer-img-wrap'>
+              <img class='offer-img' src='{{img}}'>
+            </div>
+            <div class='offer-description'>{{description}}</div>
           </div>
           <div class='social-actions'>
-            <div class='button js-offer-save'>Добавить к себе</div>
-            <div class='button js-like'>Мне нравится</div>
-            <div class='button js-comments'>Комменировать</div>
+            {{#save saved.0.fromUsers}}
+            <div class='button {{saved}}' data-button='save'>Добавить к себе</div>
+            {{/save}}
+            {{#like likes.0.fromUsers}}
+            <div class='button {{liked}}' data-button='like'>Мне нравится</div>
+            {{/like}}
+            <div class='button' data-button='viewComment'>Комменировать</div>
           </div>
         </div>
         <div class='latest-comments hidden'>
-          {{#latestComments answers.0.fromUsers}}
-          <div class='author'>
+          {{#latestAnswers answers.0.fromUsers}}
+          <div class='author' data-id='{{id}}'>
             <img class='person-avatar' src='{{avatar}}'>
             <div class='personal-content'>
               <span class='comment'>{{comment}}</span>
             </div>
-          </div>
-          {{/latestComments}}
-        </div>
-        <div class='add-comment hidden'>
-          <div class='author'>
-            <img class='person-avatar'>
-            <div class='personal-content'>
-              <input class='field-textarea js-comment' placeholder='Комментировать' type='textarea'>
+            {{#close userId}}
+            <div class='close-item'>
+              <span class='icon fa fa-times' data-button='removeAnswer'></span>
             </div>
+            {{/close}}
           </div>
+          {{/latestAnswers}}
         </div>
+        <div class='add-answer hidden'></div>
       </div>
       <div class='lightbox-footer'>
-        <div class='count-saved'>
-          <span class='title'>{{saved.0.count}} добавили себе</span>
+        {{#if saved.0.count}}
+        <div class='saved-info'>
+          {{#hasCount saved.0.count}}
+          <span class='title'>{{this}} добавили себе</span>
+          {{/hasCount}}
           <ul class='list'>
             {{#each saved.0.fromUsers}}
             <li class='list-item'>
@@ -84,8 +103,12 @@
             {{/each}}
           </ul>
         </div>
-        <div class='count-liked'>
-          <span class='title'>{{likes.0.count}} нравится</span>
+        {{/if}}
+        {{#if likes.0.count}}
+        <div class='liked-info'>
+          {{#hasCount likes.0.count}}
+          <span class='title'>{{this}} нравится</span>
+          {{/hasCount}}
           <ul class='list'>
             {{#each likes.0.fromUsers}}
             <li class='list-item'>
@@ -94,19 +117,26 @@
             {{/each}}
           </ul>
         </div>
+        {{/if}}
       </div>
     </div>
   </script>
 </html>
 <script id='offer-plate-templ' type='text/x-handlebars-template'>
   <div class='offer-plate' data-id='{{id}}'>
-    <img class='offer-img' src='{{img}}'>
-    <div class='view-offer'>Ознакомиться с предложением</div>
+    <div class='offer-img-wrap'>
+      <img class='offer-img' src='{{img}}'>
+    </div>
+    <div class='view-offer' data-button='openOfferLightbox'>Ознакомиться с предложением</div>
     <div class='social-actions'>
-      <div class='item js-offer-save fa fa-lightbulb-o'></div>
-      <div class='item js-like fa fa-heart'></div>
-      <div class='item js-comments fa fa-plus'></div>
-      <div class='item js-answer fa fa-comment-o'></div>
+      {{#save saved.0.fromUsers}}
+      <div class='item fa fa-lightbulb-o {{saved}}' data-button='save'></div>
+      {{/save}}
+      {{#like likes.0.fromUsers}}
+      <div class='item fa fa-heart {{liked}}' data-button='like'></div>
+      {{/like}}
+      <div class='item fa fa-plus' data-button='viewComment'></div>
+      <div class='item fa fa-comment' data-button='openOfferLightbox'></div>
     </div>
     <div class='offer-content'>
       <div class='description'>
@@ -116,10 +146,18 @@
         <div class='offer-location'>{{location}}</div>
       </div>
       <div class='social-info'>
-        <span class='item count-likes'>{{likes.0.count}} нравится</span>
-        <span class='item count-comments'>{{comments.0.count}} комментария</span>
-        <span class='item count-answers'>{{answers.0.count}} отзыва</span>
-        <span class='item count-saved'>{{saved.0.count}} добавили себе</span>
+        {{#hasCount likes.0.count}}
+        <span class='item count-likes'>{{this}} нравится</span>
+        {{/hasCount}}
+        {{#hasCount comments.0.count}}
+        <span class='item count-comments'>{{this}} комментария</span>
+        {{/hasCount}}
+        {{#hasCount answers.0.count}}
+        <span class='item count-answers'>{{this}} отзыва</span>
+        {{/hasCount}}
+        {{#hasCount saved.0.count}}
+        <span class='item saved-info'>{{this}} добавили себе</span>
+        {{/hasCount}}
       </div>
       <div class='offer-author'>
         <div class='author'>
@@ -133,22 +171,44 @@
       </div>
       <div class='latest-comments hidden'>
         {{#latestComments comments.0.fromUsers}}
-        <div class='author'>
+        <div class='author' data-id='{{id}}'>
           <img class='person-avatar' src='{{avatar}}'>
           <div class='personal-content'>
             <span class='comment'>{{comment}}</span>
           </div>
+          {{#close userId}}
+          <div class='close-item'>
+            <span class='icon fa fa-times' data-button='removeComment'></span>
+          </div>
+          {{/close}}
         </div>
         {{/latestComments}}
       </div>
-      <div class='add-comment hidden'>
-        <div class='author'>
-          <img class='person-avatar'>
-          <div class='personal-content'>
-            <input class='field-text js-comment' placeholder='Комментировать' type='text'>
-          </div>
-        </div>
-      </div>
+      <div class='add-comment hidden'></div>
     </div>
+  </div>
+</script>
+<script id='add-comment-templ' type='text/x-handlebars-template'>
+  <div class='author'>
+    <img class='person-avatar' src='{{avatar}}'>
+    <div class='personal-content'>
+      <input class='field-text js-comment' placeholder='Комментировать' type='text'>
+    </div>
+  </div>
+</script>
+<script id='add-answer-templ' type='text/x-handlebars-template'>
+  <div class='author'>
+    <img class='person-avatar' src='{{avatar}}'>
+    <div class='personal-content'>
+      <textarea class='field-textarea js-comment' maxlength='500' placeholder='Комментировать'></textarea>
+    </div>
+  </div>
+</script>
+<script id='user-plate-templ' type='text/x-handlebars-template'>
+  <img class='person-avatar' src='{{avatar}}'>
+  <div class='personal-content'>
+    <span>Вы вошли как:</span>
+    <br>
+    <a class='person-name link' href='/'>{{fullname}}</a>
   </div>
 </script>
