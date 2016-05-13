@@ -1,29 +1,28 @@
 var
   offers = [],
   user = {
-    fullname: 'гость',
+    fullname: 'Гость',
     avatar: '../../../images/lampa.gif'
   };
 
 $('.login .button').on('click', function () {
   var id = $('.login .field-text').val();
+
   if (id) {
     getUser(id)
   }
 })
 
-getOffers();
+getOffersRequest();
 
-function getOffers() {
+function getOffersRequest() {
   $.ajax({
     type: 'GET',
     url: 'offers.json',
     success: function (data) {
-
       $.each(data, function () {
         offers.push(this);
       });
-
       renderShortOffers();
     }
   });
@@ -31,7 +30,6 @@ function getOffers() {
 
 function offerRefresh() {
   $.ajax({
-    async: false,
     type: 'POST',
     data: JSON.stringify(offers),
     url: '/refresh',
@@ -46,8 +44,21 @@ function offerRefresh() {
   });
 }
 
-function getUser(id) {
+function getLoggedUserRequest(id) {
+
   $.ajax({
+    type: 'POST',
+    data: id,
+    url: '/getUser',
+    contentType: 'application/json',
+    success: function (data) {
+      user = data;
+      renderLoggedUser();
+      renderShortOffers();
+    }
+  })
+
+ /* $.ajax({
     type: 'GET',
     url: 'users.json',
     success: function (data) {
@@ -56,14 +67,11 @@ function getUser(id) {
           user = this;
         }
       });
-      renderShortOffers();
       renderLoggedUser();
+      renderShortOffers();
     }
-  });
+  });*/
 }
-
-
-
 function offerActionHandler(e) {
   var
     $target = $(e.target),
@@ -394,22 +402,21 @@ Handlebars.registerHelper('hasCount', function (context, options) {
 })
 function renderOffer(id) {
   var
-      source,
-      template;
+    template,
+    $lightboxWrap = $('.lightbox-wrap');
 
-  source = $('#offer-templ').html();
-  template = Handlebars.compile(source);
+  template = Handlebars.compile($('#offer-templ').html());
 
-  for (var i = 0; i < offers.length; i++) {
+  $.each(offers, function (i) {
     if (offers[i].id == id) {
-      $('.lightbox-wrap').html(template(offers[i]));
+      $lightboxWrap.html(template(offers[i]));
     }
-  }
+  });
 
   renderAddMessage('answer');
 
   $('.js-close-lightbox').on('click', function () {
-    $('.lightbox-wrap').toggleClass('hidden');
+    $lightboxWrap.toggleClass('hidden');
   });
   $('.lightbox.offer').on('click', offerActionHandler);
   $('.js-comment').on('keypress', commentingHandler);
@@ -417,13 +424,11 @@ function renderOffer(id) {
 
 function renderShortOffers() {
   var
-    source,
     template,
     columns = $('.column'),
     index = 0;
 
-  source = $('#offer-plate-templ').html();
-  template = Handlebars.compile(source);
+  template = Handlebars.compile($('#offer-plate-templ').html());
 
   $.each(columns, function (i) {
     $(this).html('');
@@ -445,17 +450,15 @@ function renderShortOffers() {
 
 function renderAddMessage(subject) {
   var
-  source,
-  template,
-  index = 0,
-  sourceSelector,
-  containerSelector;
+    template,
+    sourceSelector,
+    containerSelector;
 
   switch (subject) {
     case 'comment':
       sourceSelector = '#add-comment-templ';
       containerSelector = '.add-comment';
-    break;
+      break;
     case 'answer':
       sourceSelector = '#add-answer-templ';
       containerSelector = '.add-answer';
@@ -464,9 +467,7 @@ function renderAddMessage(subject) {
       return false;
   }
 
-  source = $(sourceSelector).html();
-  template = Handlebars.compile(source);
-
+  template = Handlebars.compile($(sourceSelector).html());
   $(containerSelector).append(template(user));
 }
 

@@ -1,29 +1,28 @@
 ﻿var
   offers = [],
   user = {
-    fullname: 'гость',
+    fullname: 'Гость',
     avatar: '../../../images/lampa.gif'
   };
 
 $('.login .button').on('click', function () {
   var id = $('.login .field-text').val();
+
   if (id) {
     getUser(id)
   }
 })
 
-getOffers();
+getOffersRequest();
 
-function getOffers() {
+function getOffersRequest() {
   $.ajax({
     type: 'GET',
     url: 'offers.json',
     success: function (data) {
-
       $.each(data, function () {
         offers.push(this);
       });
-
       renderShortOffers();
     }
   });
@@ -31,7 +30,6 @@ function getOffers() {
 
 function offerRefresh() {
   $.ajax({
-    async: false,
     type: 'POST',
     data: JSON.stringify(offers),
     url: '/refresh',
@@ -46,8 +44,21 @@ function offerRefresh() {
   });
 }
 
-function getUser(id) {
+function getLoggedUserRequest(id) {
+
   $.ajax({
+    type: 'POST',
+    data: id,
+    url: '/getUser',
+    contentType: 'application/json',
+    success: function (data) {
+      user = data;
+      renderLoggedUser();
+      renderShortOffers();
+    }
+  })
+
+ /* $.ajax({
     type: 'GET',
     url: 'users.json',
     success: function (data) {
@@ -56,8 +67,8 @@ function getUser(id) {
           user = this;
         }
       });
-      renderShortOffers();
       renderLoggedUser();
+      renderShortOffers();
     }
-  });
+  });*/
 }
